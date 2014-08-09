@@ -1,6 +1,7 @@
 def send_email(emailqueue):
   from django.core.mail import send_mail
   from django.template import Context, Template
+
   body = Template(emailqueue.email.body)
   subject = Template(emailqueue.email.subject)
   group = emailqueue.email.group
@@ -15,10 +16,16 @@ def send_email(emailqueue):
   body = body.render(Context(data))
   subject = subject.render(Context(data))
 
-  send_mail(subject, body, "%s <%s>" % (group.from_name, group.from_email), [subscriber.email], fail_silently=False)
+  try:
+    send_mail(subject, body, "%s <%s>" % (group.from_name, group.from_email), [subscriber.email], fail_silently=False)
+    emailqueue.sent = True
+    emailqueue.save()
+  except:
+    from datetime import datetime, timedelta
+    days = timedelta(days=emailqueue.email.days)
+    emailqueue.send_date = datetime.now() + days
+    emailqueue.save()
 
-  emailqueue.sent = True
-  emailqueue.save()
 
 def create_confirmation_email(group):
   from list.models import Email

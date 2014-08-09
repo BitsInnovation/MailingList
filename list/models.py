@@ -20,6 +20,7 @@ class Subscriber(models.Model):
   first_name = models.CharField(max_length=30, blank=False)
   email = models.EmailField(blank=False)
   group = models.ManyToManyField(Group, through="GroupSubscriber")
+  subscribe_date = models.DateField(auto_now_add=True)
 
   def __unicode__(self):
     return u'%s (%s)' % (self.first_name, self.email)
@@ -60,6 +61,14 @@ class EmailQueue(models.Model):
   subscriber = models.ForeignKey(Subscriber)
   email = models.ForeignKey(Email)
   sent = models.BooleanField(default=False)
+  send_date = models.DateField()
 
   def __unicode__(self):
     return u'%s - %s : Sent(%s)' % (str(self.subscriber), self.email.subject, str(self.sent))
+
+  def save(self, *args, **kwargs):
+    if not self.id:
+      from datetime import datetime, timedelta
+      days = timedelta(days=self.email.days)
+      self.send_date = datetime.now() + days
+    super(EmailQueue, self).save(*args, **kwargs)
