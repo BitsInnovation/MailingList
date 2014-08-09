@@ -2,7 +2,7 @@ from django.contrib import admin
 from list.models import Subscriber, Group, Email, EmailQueue, GroupSubscriber
 
 class GroupAdmin(admin.ModelAdmin):
-  pass
+  list_display = ('name', 'from_name', 'from_email')
 
 class SubscriberAdmin(admin.ModelAdmin):
   list_display = ('first_name', 'email')

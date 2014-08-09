@@ -10,13 +10,15 @@ def create_activation_key(user):
 
 class Group(models.Model):
   name = models.CharField(max_length=255)
+  from_name = models.CharField(max_length=30, default="Chris Bartos", blank=False)
+  from_email = models.EmailField(blank=False, default="me@chrisbartos.com")
 
   def __unicode__(self):
     return u'%s' % (self.name)
 
 class Subscriber(models.Model):
   first_name = models.CharField(max_length=30, blank=False)
-  email = models.EmailField(blank=True)
+  email = models.EmailField(blank=False)
   group = models.ManyToManyField(Group, through="GroupSubscriber")
 
   def __unicode__(self):
