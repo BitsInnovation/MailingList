@@ -32,10 +32,14 @@ class GroupSubscriber(models.Model):
   activation_key = models.CharField(max_length=40, default="", blank=True)
 
   def save(self, *args, **kwargs):
+    send_confirmation = False
+    if not self.id:
+      send_confirmation = True
     self.activation_key = create_activation_key(self.subscriber)
     super(GroupSubscriber, self).save(*args, **kwargs)
-    # Queue confirmation email
-    queue_confirmation_email(self.subscriber, self.group, self.activation_key)
+    if send_confirmation == True:
+      queue_confirmation_email(self.subscriber, self.group, self.activation_key)
+
 
 # Email for each correspondence
 #
