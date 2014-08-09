@@ -1,9 +1,11 @@
-def send_email(email, subject, subscriber, group):
+def send_email(emailqueue):
   from django.core.mail import send_mail
   from django.template import Context, Template
 
-  body = Template(email)
-  subject = Template(subject)
+  body = Template(emailqueue.email.body)
+  subject = Template(emailqueue.email.subject)
+  group = emailqueue.email.group
+  subscriber = emailqueue.subscriber
   gs = subscriber.groupsubscriber_set.get(group=group)
   data = {
     "subscriber": subscriber,
@@ -16,15 +18,28 @@ def send_email(email, subject, subscriber, group):
 
   try:
     send_mail(subject, body, "%s <%s>" % (group.from_name, group.from_email), [subscriber.email], fail_silently=False)
+    emailqueue.sent = True
+    emailqueue.save()
   except:
-    pass
+    from datetime import datetime, timedelta
+    days = timedelta(days=emailqueue.email.days)
+    emailqueue.send_date = datetime.now()
+    emailqueue.save()
 
 
 def create_confirmation_email(group):
-  email = """
-Hey {{subscriber.first_name}}!
+  from list.models import Email
+  confirmation_template = None
+  try:
+    confirmation_template = Email.objects.get(name__startswith="confirmation", group=group)
+  except:
+    confirmation_template = Email(name="confirmation_%s" % (group.name),
+                                  group = group,
+                                  subject = "Confirm your subscription",
+                                  body =
+"""Hey {{subscriber.first_name}}!
 
-Please confirm your subscription to %s list!
+Please confirm your subscription to {{group.name}} list!
 
 Click here to confirm:
 https://mailinglist.herokuapp.com/confirm/{{gs.activation_key}}
@@ -32,11 +47,16 @@ https://mailinglist.herokuapp.com/confirm/{{gs.activation_key}}
 Thanks!
 
 -- Chris
-""" % (group.name)
-  subject = "Please confirm your subscription!"
-  return (email, subject)
+""",
+                                  days=0)
+    confirmation_template.save()
+  return confirmation_template
 
 def queue_confirmation_email(user, group, activation_key):
+  from list.models import EmailQueue
   # add email in email queue move to the top of the queue
-  email, subject = create_confirmation_email(group)
-  send_email(email, subject, user, group)
+  email = EmailQueue(subscriber=user, email=create_confirmation_email(group))
+  email.save()
+
+  # send confirmation email
+  send_email(email)
