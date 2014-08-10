@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import Http404
 from django.shortcuts import redirect
 from list.models import Subscriber, GroupSubscriber, Group
+from django.views.decorators.csrf import csrf_exempt
 
 # confirms email for 1 mailing list
 def confirm_email(request, activation_key):
@@ -23,6 +24,7 @@ def unsubscribe(request, activation_key):
   return redirect("http://www.chrisbartos.com")
 
 # subscribes someone to 1 mailinglist
+@crsf_exempt
 def subscribe(request, group_name):
   if request.method == 'GET':
     raise Http404

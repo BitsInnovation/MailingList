@@ -12,9 +12,21 @@ class Group(models.Model):
   name = models.CharField(max_length=255, unique=True, blank=False)
   from_name = models.CharField(max_length=30, default="Chris Bartos", blank=False)
   from_email = models.EmailField(blank=False, default="me@chrisbartos.com")
+  signup_form = models.TextField(default="", blank=True)
 
   def __unicode__(self):
     return u'%s' % (self.name)
+
+  def save(self, *args, **kwargs):
+    self.signup_form ="""<form action="//mailinglist.herokuapp.com/subscribe/%s" method="post">
+  <label for="first_name">First name:</label>
+  <input type="text" name="first_name" />
+  <label for="email">Email:</label>
+  <input type="email" name="email" />
+  <input type="submit" />
+</form>
+""" % (self.name)
+    super(Group, self).save(*args, **kwargs)
 
 class Subscriber(models.Model):
   first_name = models.CharField(max_length=30, blank=False)
