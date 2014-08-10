@@ -32,7 +32,7 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERYBEAT_SCHEDULE = {
     "send-emails": {
         "task": "list.tasks.send_emails",
-        "schedule": crontab(hour=0,12, minute=0),
+        "schedule": crontab(hour="0,12", minute=0),
         "args": (),
     },
 }
