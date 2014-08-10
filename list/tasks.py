@@ -7,7 +7,7 @@ from list.utils import send_email
 
 logger = get_task_logger(__name__)
 
-@periodic_task(run_every=(crontab(hour="*", minute="*")), ignore_result=True)
+@periodic_task(run_every=(crontab(), ignore_result=True)
 def send_emails():
   logger.info("Start send_emails() task...")
   eq = EmailQueue.objects.filter(send_date=date.today(), sent=False)
