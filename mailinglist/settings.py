@@ -21,24 +21,23 @@ EMAIL_HOST_PASSWORD = "asDF12#$zx!@"
 EMAIL_USE_TLS = True
 
 # Celery Stuff
-import djcelery
-djcelery.setup_loader()
+BROKER_POOL_LIMIT = 1
+BROKER_URL="amqp://jhlezzkj:NUL1dxvViB-GSn80F-LUW22esLQDYTas@tiger.cloudamqp.com/jhlezzkj"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER='json'
+CELERY_RESULT_SERIALIZER='json'
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_ALWAYS_EAGER = True
 CELERY_TIMEZONE = 'America/New_York'
+# # The default Django db scheduler
 from celery.schedules import crontab
-# The default Django db scheduler
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERYBEAT_SCHEDULE = {
     "send-emails": {
         "task": "list.tasks.send_emails",
-        "schedule": crontab(hour="0,12", minute=0),
+        "schedule": crontab(),
         "args": (),
     },
 }
-
-BROKER_POOL_LIMIT = 1
-BROKER_URL="amqp://jhlezzkj:NUL1dxvViB-GSn80F-LUW22esLQDYTas@tiger.cloudamqp.com/jhlezzkj"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/

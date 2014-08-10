@@ -1,2 +1,2 @@
 web: gunicorn mailinglist.wsgi --log-file -
-worker: celery -A mailinglist worker -l info
+worker: python manage.py celeryd -B -l info
