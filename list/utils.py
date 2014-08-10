@@ -23,8 +23,8 @@ def send_email(emailqueue):
     return True
   except:
     from datetime import datetime, timedelta
-    days = timedelta(days=emailqueue.email.days)
-    emailqueue.send_date = datetime.now()
+    day = timedelta(days=1)
+    emailqueue.send_date = datetime.now() + day
     emailqueue.save()
     return False
 
