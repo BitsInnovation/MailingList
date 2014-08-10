@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from __future__ import absolute_import
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -19,6 +20,17 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "me@chrisbartos.com"
 EMAIL_HOST_PASSWORD = "asDF12#$zx!@"
 EMAIL_USE_TLS = True
+
+# Celery Stuff
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/New_York'
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+BROKER_POOL_LIMIT = 1
+BROKER_URL="amqp://jhlezzkj:NUL1dxvViB-GSn80F-LUW22esLQDYTas@tiger.cloudamqp.com/jhlezzkj"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -45,6 +57,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'list',
+    'djcelery'
 )
 
 MIDDLEWARE_CLASSES = (

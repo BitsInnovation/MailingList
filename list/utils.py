@@ -20,11 +20,13 @@ def send_email(emailqueue):
     send_mail(subject, body, "%s <%s>" % (group.from_name, group.from_email), [subscriber.email], fail_silently=False)
     emailqueue.sent = True
     emailqueue.save()
+    return True
   except:
     from datetime import datetime, timedelta
     days = timedelta(days=emailqueue.email.days)
     emailqueue.send_date = datetime.now()
     emailqueue.save()
+    return False
 
 
 def create_confirmation_email(group):
