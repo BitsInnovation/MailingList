@@ -24,7 +24,7 @@ def unsubscribe(request, activation_key):
   return redirect("http://www.chrisbartos.com")
 
 # subscribes someone to 1 mailinglist
-@crsf_exempt
+@csrf_exempt
 def subscribe(request, group_name):
   if request.method == 'GET':
     raise Http404
