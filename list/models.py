@@ -9,7 +9,7 @@ def create_activation_key(user):
   return activation_key[:40]
 
 class Group(models.Model):
-  name = models.CharField(max_length=255)
+  name = models.CharField(max_length=255, unique=True, blank=False)
   from_name = models.CharField(max_length=30, default="Chris Bartos", blank=False)
   from_email = models.EmailField(blank=False, default="me@chrisbartos.com")
 
