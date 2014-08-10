@@ -21,12 +21,21 @@ EMAIL_HOST_PASSWORD = "asDF12#$zx!@"
 EMAIL_USE_TLS = True
 
 # Celery Stuff
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+import djcelery
+djcelery.setup_loader()
+CELERY_RESULT_BACKEND = "amqp"
+CELERY_ALWAYS_EAGER = True
 CELERY_TIMEZONE = 'America/New_York'
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+from celery.schedules import crontab
+# The default Django db scheduler
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERYBEAT_SCHEDULE = {
+    "send-emails": {
+        "task": "list.tasks.send_emails",
+        "schedule": crontab(hour=0,12, minute=0),
+        "args": (),
+    },
+}
 
 BROKER_POOL_LIMIT = 1
 BROKER_URL="amqp://jhlezzkj:NUL1dxvViB-GSn80F-LUW22esLQDYTas@tiger.cloudamqp.com/jhlezzkj"
@@ -88,7 +97,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
