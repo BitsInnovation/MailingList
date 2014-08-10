@@ -23,7 +23,7 @@ EMAIL_USE_TLS = True
 # Celery Stuff
 import djcelery
 djcelery.setup_loader()
-CELERY_RESULT_BACKEND = "amqp"
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 CELERY_ALWAYS_EAGER = True
 CELERY_TIMEZONE = 'America/New_York'
 from celery.schedules import crontab
