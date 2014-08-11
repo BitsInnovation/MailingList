@@ -46,7 +46,7 @@ CELERYBEAT_SCHEDULE = {
 SECRET_KEY = '^36b5$@*uq&mlcar1)_c^g0mttz=ncxg#d@vuy6+fr%c7qey(d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
