@@ -18,7 +18,7 @@ class Group(models.Model):
     return u'%s' % (self.name)
 
   def save(self, *args, **kwargs):
-    self.signup_form ="""<form action="//mailinglist.herokuapp.com/subscribe/%s" method="post">
+    self.signup_form ="""<form action="https://mailinglist.herokuapp.com/subscribe/%s" method="post">
   <label for="first_name">First name:</label>
   <input type="text" name="first_name" />
   <label for="email">Email:</label>
@@ -69,6 +69,18 @@ class Email(models.Model):
   subject = models.CharField(max_length=255)
   body = models.TextField()
   days = models.IntegerField(default=0)
+
+  def save(self, *args, **kwargs):
+    if not self.id:
+      super(Email, self).save(*args, **kwargs)
+      from datetime import date
+      from list.models import EmailQueue, GroupSubscriber
+      subscribers = GroupSubscriber.objects.filter(group=self.group, confirmed=True)
+      for s in subscribers:
+        emailQueue = EmailQueue(subscriber=s.subscriber, email=self, sent=False, send_date=date.today())
+        emailQueue.save()
+    else:
+      super(Email, self).save(*args, **kwargs)
 
   def __unicode__(self):
     return u'%s : %s : %s' % (self.name, self.group.name, self.subject)
