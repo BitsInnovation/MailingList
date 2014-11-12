@@ -14,15 +14,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Email (Gmail)
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "me@chrisbartos.com"
-EMAIL_HOST_PASSWORD = "asDF12#$zx!@"
-EMAIL_USE_TLS = True
+EMAIL_HOST = #google.EMAIL_HOST
+EMAIL_PORT = #google.EMAIL_PORT
+EMAIL_HOST_USER = #google.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = #google.EMAIL_HOST_PASSWORD
+EMAIL_USE_TLS = #google.EMAIL_USE_TLS
 
 # Celery Stuff
 BROKER_POOL_LIMIT = 1
-BROKER_URL="amqp://jhlezzkj:NUL1dxvViB-GSn80F-LUW22esLQDYTas@tiger.cloudamqp.com/jhlezzkj"
+BROKER_URL=""
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER='json'
 CELERY_RESULT_SERIALIZER='json'
